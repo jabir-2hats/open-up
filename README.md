@@ -26,5 +26,8 @@
 -- to blade components --
 -- filter simplify
 -- comments delete and update -
--- Image remove option -
--- authroize delete
+-- Image remove option --
+-- authroize delete --
+-- Styling
+-- Doc Strings
+-- Return Statements --

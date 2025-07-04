@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\DeletePostRequest;
 use App\Http\Requests\Post\GetPostRequest;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
@@ -26,6 +27,7 @@ class PostController extends Controller
     public function getPosts(Request $request)
     {
         $posts = $this->postService->getPosts($request->all());
+        
         return response()->json($posts);
     }
 
@@ -94,9 +96,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(DeletePostRequest $request, Post $post)
     {
         $this->postService->deletePost($post);
+
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
     }
 }

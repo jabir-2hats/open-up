@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Comment\CreateCommentRequest;
+use App\Http\Requests\Comment\DeleteCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Services\CommentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
     public function __construct(protected CommentService $commentService) {}
+    
     /**
      * Display a listing of the resource.
      */
@@ -39,6 +42,7 @@ class CommentController extends Controller
     public function store(CreateCommentRequest $request)
     {
         $this->commentService->createComment($request->validated());
+
         return redirect()->back()->with('success', 'Comment added successfully.');
     }
 
@@ -64,16 +68,17 @@ class CommentController extends Controller
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
         $this->commentService->updateComment($comment, $request->validated());
-        return redirect()->back();
 
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(DeleteCommentRequest $request, Comment $comment)
     {
         $this->commentService->deleteComment($comment);
+
         return redirect()->back();
     }
 }

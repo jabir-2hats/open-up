@@ -26,6 +26,8 @@
         <article class="prose prose-lg font-serif leading-relaxed text-lg mb-8">
             {!! nl2br(e($post->content)) !!}
         </article>
+
+        {{-- Comments --}}
         <section class="mt-8">
             <h2 class="text-2xl font-bold mb-4">Comments ({{ $post->comments->count() }})</h2>
             <form action="{{ route('comments.store') }}" method="POST" class="mb-6">
@@ -37,7 +39,6 @@
                 @enderror
                 <button type="submit" class="btn btn-primary">Post Comment</button>
             </form>
-
             <div class="space-y-4">
                 @forelse($post->comments as $comment)
                     <x-comment :comment="$comment" :post="$post" />
@@ -47,7 +48,8 @@
             </div>
         </section>
     </div>
-    <!-- Delete Modal -->
+
+    {{-- Delete Modal --}}
     <x-modal id="delete_modal" title="Delete this comment?">
         <p class="py-4">Are you sure you want to delete this comment?</p>
         <x-slot:actions>
@@ -59,7 +61,7 @@
         </x-slot:actions>
     </x-modal>
 
-    <!-- Comments Modal -->
+    {{-- Edit Modal --}}
     <x-modal id="edit_modal" title="Edit Comment">
         <form id="edit_form" action="" method="POST">
             @csrf

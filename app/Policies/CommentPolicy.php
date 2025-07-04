@@ -34,17 +34,27 @@ class CommentPolicy
 
     /**
      * Determine whether the user can update the model.
+     *
+     * @param User $user
+     * @param Comment $comment
+     * @return bool
      */
     public function update(User $user, Comment $comment): bool
     {
+        // Only the user who created the comment can update it
         return $user->id === $comment->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
+     *
+     * @param User $user
+     * @param Comment $comment
+     * @return bool
      */
     public function delete(User $user, Comment $comment): bool
     {
+        // Only the user who created the comment can delete it
         return $user->id === $comment->user_id;
     }
 

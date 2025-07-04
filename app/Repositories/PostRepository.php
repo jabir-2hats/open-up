@@ -7,6 +7,25 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostRepository
 {
+    /**
+     * Retrieve a list of posts with optional filtering, sorting, and pagination.
+     *
+     * This method supports the following filters:
+     * - search['value']: Filter posts based on title, author name, or tag name.
+     * - order[0]['column'], order[0]['dir']: Specify sorting column and direction ('asc' or 'desc').
+     *   Supported columns are: 'title', 'author.name', 'published_at', 'status', 'comments_count'.
+     * - start, length: Pagination parameters to specify offset and limit of the result set.
+     * - draw: Optional integer for DataTables draw counter.
+     *
+     * The returned array is formatted for DataTables and includes:
+     * - draw: The draw counter.
+     * - recordsTotal: Total number of records.
+     * - recordsFiltered: Number of records after filtering.
+     * - data: Array of posts data including title, author, published date, status, comments count, tags, and actions.
+     *
+     * @param array $filters An associative array of filters for querying posts.
+     * @return array The resulting posts data formatted for DataTables.
+     */
     public function getPosts(array $filters = []): array
     {
         $query = Post::with(['author', 'tags'])->withCount('comments');
@@ -18,6 +37,9 @@ class PostRepository
                 $q->where('title', 'like', "%$search%")
                     ->orWhereHas('author', function ($q2) use ($search) {
                         $q2->where('name', 'like', "%$search%");
+                    })
+                    ->orWhereHas('tags', function ($q3) use ($search) {
+                        $q3->where('name', 'like', "%$search%");
                     });
             });
         }
@@ -33,9 +55,9 @@ class PostRepository
             ];
 
             $columnIndex = $filters['order'][0]['column'];
-            
+
             $direction = $filters['order'][0]['dir'] ?? 'desc';
-            
+
             if (isset($columns[$columnIndex])) {
                 if ($columns[$columnIndex] === 'author.name') {
                     $query->join('users', 'posts.user_id', '=', 'users.id')->select('posts.*');
@@ -65,7 +87,7 @@ class PostRepository
                 'title' => $post->title,
                 'author' => ['name' => $post->author->name ?? ''],
                 'published_at' => $post->published_at,
-                'status' =>view('posts.partials.status', ['status' => $post->status])->render(),
+                'status' => view('posts.partials.status', ['status' => $post->status])->render(),
                 'comments_count' => view('posts.partials.comments', ['post' => $post])->render(),
                 'tags' => view('posts.partials.tags', ['tags' => $post->tags->pluck('name')])->render(),
                 'actions' => view('posts.partials.actions', ['post' => $post])->render(),
@@ -80,14 +102,35 @@ class PostRepository
         ];
     }
 
+    /**
+     * Create a new post with the given data.
+     *
+     * This method creates a post record in the database and attaches any associated tags.
+     *
+     * @param array $data The data to create the post with, including optional 'tags' for tag associations.
+     * @return Post The newly created post instance.
+     */
+
     public function createPost(array $data): Post
     {
         $post = Post::create($data);
         if (!empty($data['tags'])) {
             $post->tags()->attach($data['tags']);
         }
+
         return $post;
     }
+
+    /**
+     * Update an existing post with the given data.
+     *
+     * This method updates the post record in the database with the provided data
+     * and synchronizes any associated tags.
+     *
+     * @param Post $post The post instance to update.
+     * @param array $data The data to update the post with, including optional 'tags' for tag associations.
+     * @return Post The updated post instance.
+     */
 
     public function updatePost(Post $post, array $data): Post
     {
@@ -95,9 +138,16 @@ class PostRepository
         if (isset($data['tags'])) {
             $post->tags()->sync($data['tags']);
         }
+
         return $post;
     }
 
+    /**
+     * Delete a post and its associated image, if any.
+     *
+     * @param  Post  $post
+     * @return void
+     */
     public function deletePost(Post $post): void
     {
         $post->delete();

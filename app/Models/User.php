@@ -47,11 +47,22 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Get all posts authored by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'user_id');
     }
 
+    /**
+     * Get all comments authored by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'user_id');

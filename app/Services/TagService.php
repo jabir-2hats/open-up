@@ -14,6 +14,13 @@ class TagService
         //
     }
 
+    /**
+     * Retrieve all tags from the database.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Tag>
+     */
+
+
     public function getTags()
     {
         return Tag::get();
