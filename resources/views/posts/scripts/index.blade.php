@@ -10,6 +10,11 @@
                 "url": "{{ route('posts.data') }}",
                 "type": "GET"
             },
+            "pageLength": 12,
+            "lengthMenu": [
+                [12, 25, 50],
+                [12, 25, 50]
+            ],
             "columns": [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',

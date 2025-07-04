@@ -53,7 +53,7 @@ class PostRepository
 
         // Pagination
         $start = $filters['start'] ?? 0;
-        $length = $filters['length'] ?? 10;
+        $length = $filters['length'] ?? 12;
         $data = $query->skip($start)->take($length)->get();
 
         // Format data for DataTables
