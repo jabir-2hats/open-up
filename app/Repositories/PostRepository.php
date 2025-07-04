@@ -7,7 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostRepository
 {
-    public function getPostsForDataTable(array $filters = []): array
+    public function getPosts(array $filters = []): array
     {
         $query = Post::with(['author', 'tags'])->withCount('comments');
         $orderByFields = [];
@@ -78,71 +78,6 @@ class PostRepository
             'recordsFiltered' => $recordsFiltered,
             'data' => $result,
         ];
-    }
-
-    public function getPosts(array $filters = []): LengthAwarePaginator
-    {
-        $query = Post::with(['author', 'tags'])->withCount('comments');
-        $orderByFields = [];
-
-
-        // Search queries
-        if (!empty($filters['tags']) && is_array($filters['tags'])) {
-            $query->whereHas('tags', function ($q) use ($filters) {
-                $q->whereIn('tags.id', $filters['tags']);
-            }, '=', count($filters['tags']));
-        }
-
-        if (!empty($filters['comments_count'])) {
-            $query->has('comments', '=', $filters['comments_count']);
-        }
-
-        if (!empty($filters['author'])) {
-            $query->whereHas('author', function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['author'] . '%');
-            });
-        }
-
-        if (!empty($filters['title'])) {
-            $query->where('title', 'like', '%' . $filters['title'] . '%');
-        }
-
-        if (!empty($filters['published_at'])) {
-            $query->whereDate('published_at', $filters['published_at']);
-        }
-
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status'] == "Active" ? true : false);
-        }
-
-        // Order by queries
-        if (!empty($filters['title_order'])) {
-            $orderByFields[] = ['title', $filters['title_order']];
-        }
-
-        if (!empty($filters['author_order'])) {
-            $query->join('users', 'posts.user_id', '=', 'users.id')
-                ->select('posts.*');
-            $orderByFields[] = ['users.name', $filters['author_order']];
-        }
-
-        if (!empty($filters['published_at_order'])) {
-            $orderByFields[] = ['published_at', $filters['published_at_order']];
-        }
-
-        if (!empty($filters['comments_count_order'])) {
-            $orderByFields[] = ['comments_count', $filters['comments_count_order']];
-        }
-
-        if (!empty($orderByFields)) {
-            foreach ($orderByFields as [$column, $direction]) {
-                $query->orderBy($column, $direction);
-            }
-        } else {
-            $query->latest('posts.created_at');
-        }
-
-        return $query->paginate(12)->withQueryString();
     }
 
     public function createPost(array $data): Post

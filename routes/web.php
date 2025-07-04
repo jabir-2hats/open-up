@@ -23,7 +23,6 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('new-index', [PostController::class, 'newIndex'])->name('posts.new-index');
     Route::get('posts/data', [PostController::class, 'getPosts'])->name('posts.data');
     Route::resource('posts', PostController::class);
 

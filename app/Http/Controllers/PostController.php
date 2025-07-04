@@ -18,27 +18,14 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(GetPostRequest $request, TagService $tagService)
+    public function index()
     {
-        
-        $posts = $this->postService->getPosts($request->validated());
-
-        $tags = $tagService->getTags();
-
-        return view('posts.index', [
-            'posts' => $posts,
-            'tags' => $tags,
-        ]);
-    }
-
-    public function newIndex()
-    {
-        return view('posts.new-index');
+        return view('posts.index');
     }
 
     public function getPosts(Request $request)
     {
-        $posts = $this->postService->getPostsForDataTable($request->all());
+        $posts = $this->postService->getPosts($request->all());
         return response()->json($posts);
     }
 

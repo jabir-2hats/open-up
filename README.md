@@ -22,8 +22,9 @@
     
 
 
--- jquery datatable
+-- jquery datatable --
 -- to blade components --
 -- filter simplify
 -- comments delete and update -
 -- Image remove option -
+-- authroize delete

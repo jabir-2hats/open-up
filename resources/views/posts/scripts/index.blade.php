@@ -2,17 +2,67 @@
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
+        $('#posts-table').DataTable({
+            "responsive": true,
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('posts.data') }}",
+                "type": "GET"
+            },
+            "columns": [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'title',
+                    name: 'title'
+                },
+                {
+                    data: 'author.name',
+                    name: 'author.name'
+                },
+                {
+                    data: 'published_at',
+                    name: 'published_at'
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                },
+                {
+                    data: 'comments_count',
+                    name: 'comments_count',
+                },
+                {
+                    data: 'tags',
+                    name: 'tags',
+                    orderable: false,
+                    searchable: false,
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            "order": [
+                [3, "desc"]
+            ]
+        });
 
-        $('.delete-btn').on('click', function() {
+        $(document).on('click', '.delete-btn', function() {
             let deleteModal = $('#delete_modal');
-            deleteModal[0].showModal()
+            deleteModal[0].showModal();
             let form = deleteModal.find('form');
             let postId = $(this).data('post-id');
             form.attr('action', `/posts/${postId}`);
         });
 
-
-        $('.comments-btn').on('click', function() {
+        $(document).on('click', '.comments-btn', function() {
 
             var postId = $(this).data('post-id');
             var modal = $('#comments_modal');
@@ -55,5 +105,6 @@
                 }
             });
         });
+
     });
 </script>

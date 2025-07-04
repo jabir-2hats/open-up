@@ -12,14 +12,9 @@ class PostService
 {
     public function __construct(protected PostRepository $postRepository) {}
 
-    public function getPosts(array $filters = [])
+    public function getPosts(array $filters = []): array
     {
         return $this->postRepository->getPosts($filters);
-    }
-
-    public function getPostsForDataTable(array $filters = []): array
-    {
-        return $this->postRepository->getPostsForDataTable($filters);
     }
 
     public function createPost(array $data)
