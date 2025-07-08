@@ -10,6 +10,11 @@ class Tag extends Model
 {
     use HasFactory;
     
+    /**
+     * The posts that belong to the Tag
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function posts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_tag', 'tag_id', 'post_id');

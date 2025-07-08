@@ -54,12 +54,12 @@
                 </div>
 
                 <x-fieldset title="Tags" name="tags">
-                    <select class="select !h-auto" id="tags" name="tags[]" multiple>
+                    <select class="select !h-auto" id="tags" name="tags[]" multiple="multiple">
                         <option disabled>Tags</option>
-                        @foreach ($tags as $tag)
-                            <option value="{{ $tag->id }}"
-                                {{ in_array($tag->id, old('tags', $post->tags->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                {{ $tag->name }}
+                        @foreach ($tags as $id => $tag)
+                            <option value="{{ $id }}"
+                                {{ in_array($id, old('tags', $post->tags->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                {{ $tag }}
                             </option>
                         @endforeach
                     </select>

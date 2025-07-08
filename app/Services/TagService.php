@@ -19,11 +19,9 @@ class TagService
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Tag>
      */
-
-
     public function getTags()
     {
-        return Tag::get();
+        return Tag::pluck('name', 'id');
     }
 
     // Static method removed. Use dependency injection and pass tags from controller to view instead.

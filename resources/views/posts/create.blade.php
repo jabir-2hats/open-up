@@ -39,10 +39,10 @@
                 <x-fieldset title="Tags" name="tags">
                     <select class="select !h-auto" id="tags" name="tags[]" multiple>
                         <option disabled>Tags</option>
-                        @foreach ($tags as $tag)
-                            <option value="{{ $tag->id }}"
-                                {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
-                                {{ $tag->name }}
+                        @foreach ($tags as $id => $tag)
+                            <option value="{{ $id }}"
+                                {{ in_array($tag, old('tags', [])) ? 'selected' : '' }}>
+                                {{ $tag }}
                             </option>
                         @endforeach
                     </select>

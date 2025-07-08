@@ -22,12 +22,13 @@
     
 
 
--- jquery datatable --
 -- to blade components --
--- filter simplify
 -- comments delete and update -
 -- Image remove option --
 -- authroize delete --
+
+
+
+-- TDD
+-- MultiSelect on edit and create
 -- Styling
--- Doc Strings
--- Return Statements --

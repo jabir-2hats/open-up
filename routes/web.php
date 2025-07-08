@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('comments', CommentController::class)->except([
         'show', 'edit'
     ]);
+
+    Route::get('tags/data', [TagController::class, 'getTags'])->name('tags.data');
 
      Route::get('/dashboard', function () {
         return redirect()->route('posts.index');

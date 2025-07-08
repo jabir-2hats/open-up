@@ -26,7 +26,32 @@ class PostService
      */
     public function getPosts(array $filters = []): array
     {
-        return $this->postRepository->getPosts($filters);
+        ['posts' => $posts, 'recordsTotal' => $recordsTotal, 'recordsFiltered' => $recordsFiltered] = $this->postRepository->getPosts($filters);
+
+        $result = [];
+        $start = $filters['start'] ?? 0;
+
+        $rowIndex = $start + 1;
+        foreach ($posts as $post) {
+            $result[] = [
+                'DT_RowIndex' => $rowIndex++,
+                'title' => $post->title,
+                'author' => ['name' => $post->author->name ?? ''],
+                'published_at' => $post->published_at,
+                'status' => view('posts.partials.status', ['status' => $post->status])->render(),
+                'comments_count' => view('posts.partials.comments', ['post' => $post])->render(),
+                'tags' => view('posts.partials.tags', ['tags' => $post->tags->pluck('name')])->render(),
+                'actions' => view('posts.partials.actions', ['post' => $post])->render(),
+            ];
+        }
+
+        return [
+            'draw' => intval($filters['draw'] ?? 1),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $result,
+        ];
+        
     }
 
     /**
@@ -62,7 +87,6 @@ class PostService
      * @param array $data The data to update the post with, including optional 'image' and 'remove_image'.
      * @return Post The updated post instance.
      */
-
     public function updatePost(Post $post, array $data)
     {
         if (isset($data['image'])) {

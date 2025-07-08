@@ -49,6 +49,7 @@ class AuthController extends Controller
     {
         $result = $this->authService->authenticate($request);
         if ($result === true) {
+
             return redirect()->intended('dashboard');
         }
 
@@ -77,6 +78,7 @@ class AuthController extends Controller
     {
         $user = $this->authService->register($request->validated());
         if ($user) {
+
             return redirect()->intended('dashboard');
         }
 
